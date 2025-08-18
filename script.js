@@ -26,6 +26,25 @@ function f(x, coef) {
   return res;
 }
 
+function bolzano(coef, a, b, passo) {
+  const intervalos = [];
+  let x1 = a;
+  let f1 = f(x1, coef);
+
+  while (x1 < b) {
+    let x2 = x1 + passo;
+    let f2 = f(x2, coef);
+
+    if (f1 * f2 < 0) {
+      intervalos.push([x1, x2]);
+    }
+
+    x1 = x2;
+    f1 = f2;
+  }
+  return intervalos;
+}
+
 function bissecao(coef, a, b, tol, maxIter) {
   let fa = f(a, coef);
   let fb = f(b, coef);
@@ -117,4 +136,45 @@ document.addEventListener("DOMContentLoaded", () => {
     output.innerHTML = "";
   });
 
+  function renderResultado(res, aInit, bInit, index) {
+    const wrap = document.createElement("div");
+
+    const title = document.createElement("div");
+    title.className = "interval-title";
+    title.textContent = `Raiz ${index} no intervalo [${fmt(aInit)} , ${fmt(bInit)}]`;
+    wrap.appendChild(title);
+
+    const tableWrap = document.createElement("div");
+    tableWrap.className = "table-wrap";
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    thead.innerHTML = `<tr>
+      <th>Iter</th><th>Xa</th><th>f(Xa)</th><th>Xb</th><th>f(Xb)</th><th>Xn</th><th>f(Xn)</th><th>Erro</th>
+    </tr>`;
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    res.linhas.forEach(l => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${l.iter}</td>
+        <td>${fmt(l.a)}</td>
+        <td>${fmt(l.fa)}</td>
+        <td>${fmt(l.b)}</td>
+        <td>${fmt(l.fb)}</td>
+        <td>${fmt(l.p)}</td>
+        <td>${fmt(l.fp)}</td>
+        <td>${fmt(l.erro)}</td>`;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    wrap.appendChild(tableWrap);
+
+    const resBox = document.createElement("div");
+    resBox.className = "result-box";
+    resBox.textContent = `Raiz aproximada: ${res.raiz.toFixed(12)} — Erro final: ${res.erro.toExponential(6)} — Iterações: ${res.iter}`;
+    wrap.appendChild(resBox);
+
+    output.appendChild(wrap);
+  }
 });
