@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portifólio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white font-sans">
+  <!-- Navbar -->
+  <header class="flex items-center justify-between px-6 py-4">
+    <!-- Logo -->
+    <h1 class="text-2xl font-bold">
+      Cálculo<span class="text-fuchsia-500"> Numérico</span>.
+    </h1>
+
+    <!-- Links -->
+    <nav class="hidden md:flex space-x-8 text-sm font-medium">
+      <a href="#" class="hover:text-fuchsia-400">Home</a>
+      <a href="#sobre" class="hover:text-fuchsia-400">Sobre mim</a>
+      <a href="#metodos" class="hover:text-fuchsia-400">Métodos</a>
+      <a href="#contato" class="hover:text-fuchsia-400">Contato</a>
+    </nav>
+
+    <!-- Botão -->
+    <a
+      href="https://github.com/anabeatrizdscotrim/calculo-numerico"
+      target="_blank"
+      class="hidden md:inline-block bg-gradient-to-r from-fuchsia-500 to-orange-400 text-white px-5 py-2 rounded-full font-medium shadow-lg hover:opacity-90 transition transform duration-300 hover:scale-105"
+    >
+      Veja meu GitHub
+    </a>
+  </header>
+
+  <!-- Hero -->
+  <main class="flex flex-col items-center justify-center text-center px-6 py-12">
+    <!-- Foto -->
+    <img
+      src="imagens/calculoNumerico.gif"
+      alt="Profile"
+      class="w-40 h-40 rounded-full object-cover border-4 border-neutral-700 shadow-xl mb-6"
+    />
+
+    <!-- Texto -->
+    <h2 class="text-3xl md:text-5xl font-bold leading-snug">
+      Bem vindo ao
+      <span class="bg-gradient-to-r from-fuchsia-500 to-orange-400 text-transparent bg-clip-text">
+        Portifólio
+      </span>
+       De Cálculo Numérico
+    </h2>
+
+    <p class="mt-4 text-gray-400 max-w-xl">
+      Este portfólio foi desenvolvido com fins educacionais para a disciplina de Cálculo Numérico, ministrada pela professora Tania Camila Kochmanscky.
+      
+    <!-- Botões -->
+    <div class="mt-6 flex space-x-4">
+      <a
+        href="#contact"
+        class="bg-gradient-to-r from-fuchsia-500 to-orange-400 px-6 py-3 rounded-full font-medium hover:opacity-90 transition transform duration-300 hover:scale-105"
+      >
+          Ver Métodos
+      </a>
+      <a
+        href="resume.pdf"
+        class="border border-gray-500 px-6 py-3 rounded-full font-medium hover:bg-gray-800 transition transform duration-300 hover:scale-105"
+      >
+        Resumo
+      </a>
+    </div>
+
+    <!-- Métodos -->
+    <section id="services" class="px-6 py-16 bg-black text-white">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold">
+          <span class="relative">Métodos
+            <span class="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-fuchsia-500 to-orange-400 rounded-full"></span>
+          </span>
+        </h2>
+      </div>
+
+      <!-- Grid de Cards -->
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Card 01 -->
+        <div class="border border-gray-600 rounded-lg p-6 hover:border-fuchsia-500 transition transform duration-300 hover:scale-105">
+          <h3 class="text-lg font-bold mb-2">01</h3>
+          <h4 class="text-xl font-semibold bg-gradient-to-r from-fuchsia-500 to-orange-400 text-transparent bg-clip-text">Método da Bisseção</h4>
+          <p class="text-gray-400 mt-2 mb-4">Método da Bisseção</p>
+          <a href="#" class="text-sm font-medium hover:underline inline-flex items-center">Acessar <span class="ml-1">→</span></a>
+        </div>
+
+        <!-- Card 02 -->
+        <div class="border border-gray-600 rounded-lg p-6 hover:border-fuchsia-500 transition transform duration-300 hover:scale-105">
+          <h3 class="text-lg font-bold mb-2">02</h3>
+          <h4 class="text-xl font-semibold bg-gradient-to-r from-fuchsia-500 to-orange-400 text-transparent bg-clip-text">Eliminação de Gauss</h4>
+          <p class="text-gray-400 mt-2 mb-4">Eliminação de Gauss</p>
+          <a href="#" class="text-sm font-medium hover:underline inline-flex items-center">Acessar <span class="ml-1">→</span></a>
+        </div>
+
+        <!-- Card 03 -->
+        <div class="border border-gray-600 rounded-lg p-6 hover:border-fuchsia-500 transition transform duration-300 hover:scale-105">
+          <h3 class="text-lg font-bold mb-2">03</h3>
+          <h4 class="text-xl font-semibold bg-gradient-to-r from-fuchsia-500 to-orange-400 text-transparent bg-clip-text">Próximo Método</h4>
+          <p class="text-gray-400 mt-2 mb-4">Próximo Método</p>
+          <a href="#" class="text-sm font-medium hover:underline inline-flex items-center">Acessar <span class="ml-1">→</span></a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</body>
+</html>

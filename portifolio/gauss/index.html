@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Método da Eliminação de Gauss</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Método da Eliminação de Gauss</h1>
+    
+    <label for="size">Escolha o tamanho da matriz:</label>
+    <select id="size">
+      <option value="4">4 x 4</option>
+      <option value="10">10 x 10</option>
+    </select>
+    <button onclick="gerarMatriz()">Gerar Matriz</button>
+    
+    <div id="matrixInput"></div>
+    <button onclick="resolver()">Resolver Sistema</button>
+    
+    <div id="output"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
