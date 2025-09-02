@@ -1,27 +1,184 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Método da Eliminação de Gauss</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Método de Eliminação de Gauss</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    table {
+      border-collapse: collapse;
+      margin: auto;
+    }
+    td {
+      border: 1px solid #444;
+      padding: 4px;
+    }
+    input[type="number"] {
+      background-color: #111; 
+      color: white;
+      font-weight: 600;
+      width: 60px;
+      text-align: center;
+      border: 1px solid #555;
+      border-radius: 6px;
+      padding: 4px;
+    }
+    .step table {
+      margin-top: 8px;
+      border: 1px solid #444;
+    }
+  </style>
 </head>
-<body>
-  <div class="container">
-    <h1>Método da Eliminação de Gauss</h1>
+<body class="bg-black text-white font-sans min-h-screen flex flex-col items-center justify-center px-6">
+
+  <!-- Container -->
+  <div class="w-full max-w-6xl bg-neutral-900 rounded-2xl shadow-2xl p-8">
     
-    <label for="size">Escolha o tamanho da matriz:</label>
-    <select id="size">
-      <option value="4">4 x 4</option>
-      <option value="10">10 x 10</option>
-    </select>
-    <button onclick="gerarMatriz()">Gerar Matriz</button>
-    
-    <div id="matrixInput"></div>
-    <button onclick="resolver()">Resolver Sistema</button>
-    
-    <div id="output"></div>
+    <!-- Título -->
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-6">
+      <span class="bg-gradient-to-r from-fuchsia-500 to-orange-400 text-transparent bg-clip-text">
+        Método de Eliminação de Gauss
+      </span>
+    </h1>
+
+    <!-- Descrição -->
+    <p class="text-center text-gray-400 mb-8">
+      Escolha o tamanho da matriz, gere valores aleatórios ou edite-os manualmente e clique em <strong>Resolver</strong> para ver as etapas.
+    </p>
+
+    <!-- Form -->
+    <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-6">
+      <input
+        id="size"
+        type="number"
+        min="2"
+        max="18"
+        class="border border-gray-500 bg-black text-white px-4 py-2 rounded-lg focus:outline-none focus:border-fuchsia-500 w-32 text-center"
+      />
+      <button
+        onclick="gerarMatriz()"
+        class="bg-gradient-to-r from-fuchsia-500 to-orange-400 text-white px-6 py-2 rounded-full font-semibold shadow-lg transform transition duration-300 hover:scale-105 hover:opacity-90"
+      >
+        Gerar Matriz
+      </button>
+    </div>
+
+    <!-- Área da matriz -->
+    <div id="matrixInput" class="overflow-x-auto text-center mb-6"></div>
+
+    <!-- Botão Resolver -->
+    <div class="text-center">
+      <button
+        onclick="resolver()"
+        class="bg-gradient-to-r from-green-500 to-teal-400 text-white px-8 py-3 rounded-full font-semibold shadow-lg transform transition duration-300 hover:scale-105 hover:opacity-90"
+      >
+        Resolver
+      </button>
+    </div>
+
+    <!-- Output -->
+    <div id="output" class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    function gerarMatriz() {
+      const size = parseInt(document.getElementById("size").value);
+      const div = document.getElementById("matrixInput");
+      div.innerHTML = "";
+      
+      const table = document.createElement("table");
+      for (let i = 0; i < size; i++) {
+        const row = document.createElement("tr");
+        for (let j = 0; j <= size; j++) {
+          const cell = document.createElement("td");
+          const input = document.createElement("input");
+          input.type = "number";
+          input.value ="";
+          cell.appendChild(input);
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+      div.appendChild(table);
+    }
+
+    function getMatrix() {
+      const div = document.getElementById("matrixInput");
+      const rows = div.getElementsByTagName("tr");
+      const matrix = [];
+      for (let i = 0; i < rows.length; i++) {
+        const inputs = rows[i].getElementsByTagName("input");
+        const row = [];
+        for (let j = 0; j < inputs.length; j++) {
+          row.push(parseFloat(inputs[j].value));
+        }
+        matrix.push(row);
+      }
+      return matrix;
+    }
+
+    function printMatrix(matrix) {
+      let html = "<table>";
+      for (let i = 0; i < matrix.length; i++) {
+        html += "<tr>";
+        for (let j = 0; j < matrix[i].length; j++) {
+          html += `<td>${matrix[i][j].toFixed(2)}</td>`;
+        }
+        html += "</tr>";
+      }
+      html += "</table>";
+      return html;
+    }
+
+    function resolver() {
+      const output = document.getElementById("output");
+      output.innerHTML = "";
+      let A = getMatrix();
+      const n = A.length;
+      let multiplicadores = 0;
+
+      for (let k = 0; k < n - 1; k++) {
+        for (let i = k + 1; i < n; i++) {
+          let m = A[i][k] / A[k][k];
+          multiplicadores++;
+          for (let j = k; j <= n; j++) {
+            A[i][j] -= m * A[k][j];
+          }
+
+          const stepDiv = document.createElement("div");
+          stepDiv.className =
+            "border border-gray-600 rounded-lg p-6 hover:border-fuchsia-500 transition transform hover:scale-105 bg-neutral-800";
+          stepDiv.innerHTML = `
+            <h3 class="text-lg font-bold mb-2">Etapa ${k + 1}, linha ${i + 1}</h3>
+            <p class="text-gray-400 mb-4">Multiplicador usado: m = ${m.toFixed(4)}</p>
+            ${printMatrix(A)}
+          `;
+          output.appendChild(stepDiv);
+        }
+      }
+
+      const x = new Array(n).fill(0);
+      for (let i = n - 1; i >= 0; i--) {
+        let soma = A[i][n];
+        for (let j = i + 1; j < n; j++) {
+          soma -= A[i][j] * x[j];
+        }
+        x[i] = soma / A[i][i];
+      }
+
+      const resDiv = document.createElement("div");
+      resDiv.className =
+        "border border-green-500 rounded-lg p-6 hover:border-green-400 transition transform hover:scale-105 bg-neutral-800 col-span-full";
+      resDiv.innerHTML = `
+        <h3 class="text-xl font-bold mb-2 text-green-400">Resultado Final</h3>
+        <p class="text-gray-300 mb-4">Quantidade de multiplicadores: ${multiplicadores}</p>
+        <strong>Solução:</strong><br>
+        ${x.map((val, idx) => "x" + (idx + 1) + " = " + val.toFixed(4)).join("<br>")}
+      `;
+      output.appendChild(resDiv);
+    }
+  </script>
 </body>
 </html>

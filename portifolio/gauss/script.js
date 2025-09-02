@@ -6,12 +6,11 @@ function gerarMatriz() {
   const table = document.createElement("table");
   for (let i = 0; i < size; i++) {
     const row = document.createElement("tr");
-    for (let j = 0; j <= size; j++) { // +1 para coluna dos termos independentes
+    for (let j = 0; j <= size; j++) { 
       const cell = document.createElement("td");
       const input = document.createElement("input");
       input.type = "number";
-      input.value = Math.floor(Math.random() * 10) + 1; // valores aleatórios
-      cell.appendChild(input);
+      input.value = ""; 
       row.appendChild(cell);
     }
     table.appendChild(row);
@@ -73,7 +72,6 @@ function resolver() {
     }
   }
   
-  // Retrosubstituição
   const x = new Array(n).fill(0);
   for (let i = n - 1; i >= 0; i--) {
     let soma = A[i][n];
@@ -81,9 +79,7 @@ function resolver() {
       soma -= A[i][j] * x[j];
     }
     x[i] = soma / A[i][i];
-  }
   
-  // Resultado final
   const resDiv = document.createElement("div");
   resDiv.className = "step";
   resDiv.innerHTML = `<h3>Resultado Final</h3>
@@ -91,4 +87,5 @@ function resolver() {
     <strong>Solução:</strong><br>
     ${x.map((val, idx) => "x" + (idx + 1) + " = " + val.toFixed(4)).join("<br>")}`;
   output.appendChild(resDiv);
+}
 }

@@ -1,51 +1,184 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Método de Bolzano e Bisseção</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Método da Bisseção</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: Arial, sans-serif; background: #f0f4f8; color: #333; margin: 0; padding: 0; }
-    .container { max-width: 900px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    h1 { text-align: center; color: #1e3a8a; }
-    form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-    label { flex: 1 1 100%; margin-bottom: 5px; font-weight: bold; }
-    input { flex: 1 1 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
-    button { padding: 10px 20px; margin-top: 10px; border: none; border-radius: 4px; background: #1e3a8a; color: #fff; cursor: pointer; }
-    button:hover { background: #3b82f6; }
-    .msg-error { color: red; margin: 10px 0; }
-    .interval-title { margin-top: 20px; font-weight: bold; font-size: 1.1em; color: #1e40af; }
-    .table-wrap { overflow-x: auto; margin-top: 10px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: center; }
-    th { background: #e0e7ff; }
-    .result-box { margin-top: 10px; padding: 10px; background: #e0f2fe; border-radius: 4px; font-weight: bold; }
+    table {
+      border-collapse: collapse;
+      margin: auto;
+    }
+    td, th {
+      border: 1px solid #444;
+      padding: 4px 8px;
+      text-align: center;
+    }
+    .step table {
+      margin-top: 8px;
+      border: 1px solid #444;
+    }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1>Método de Bolzano e Bisseção</h1>
-    <form id="form">
-      <label for="grau">Grau do polinômio:</label>
-      <input type="number" id="grau" required>
+<body class="bg-black text-white font-sans min-h-screen flex flex-col items-center justify-center px-6">
 
-      <label for="coef">Coeficientes (separados por vírgula):</label>
-      <input type="text" id="coef" placeholder="Ex: 1, -3, 2" required>
+  <!-- Container -->
+  <div class="w-full max-w-6xl bg-neutral-900 rounded-2xl shadow-2xl p-8">
 
-      <label for="tol">Tolerância:</label>
-      <input type="number" id="tol" value="0.000001" step="any" required>
+    <!-- Título -->
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-6">
+      <span class="bg-gradient-to-r from-fuchsia-500 to-orange-400 text-transparent bg-clip-text">
+        Método da Bisseção
+      </span>
+    </h1>
 
-      <label for="maxit">Máximo de iterações:</label>
-      <input type="number" id="maxit" value="50" required>
+    <!-- Descrição -->
+    <p class="text-center text-gray-400 mb-8">
+      Informe o grau do polinômio, seus coeficientes e a precisão desejada (ε).  
+      O programa exibirá os intervalos com mudança de sinal e a raiz aproximada.
+    </p>
 
-      <button type="submit">Calcular</button>
-      <button type="button" id="limpar">Limpar</button>
-    </form>
+    <!-- Form -->
+    <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-6">
+      <input
+        id="grau"
+        type="number"
+        min="1"
+        placeholder="Grau (ex: 3)"
+        class="border border-gray-500 bg-black text-white px-4 py-2 rounded-lg focus:outline-none focus:border-fuchsia-500 w-32 text-center"
+      />
+      <input
+        id="coeficientes"
+        type="text"
+        placeholder="Coeficientes (ex: 1,0,-9,3)"
+        class="border border-gray-500 bg-black text-white px-4 py-2 rounded-lg focus:outline-none focus:border-orange-400 w-80 text-center"
+      />
+      <input
+        id="epsilon"
+        type="number"
+        step="0.0001"
+        placeholder="ε (ex: 0.01)"
+        class="border border-gray-500 bg-black text-white px-4 py-2 rounded-lg focus:outline-none focus:border-green-400 w-32 text-center"
+      />
+      <button
+        onclick="calcular()"
+        class="bg-gradient-to-r from-fuchsia-500 to-orange-400 text-white px-6 py-2 rounded-full font-semibold shadow-lg transform transition duration-300 hover:scale-105 hover:opacity-90"
+      >
+        Calcular
+      </button>
+    </div>
 
-    <div id="output"></div>
+    <!-- Output -->
+    <div id="resultado" class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    function calcularPolinomio(coefs, x) {
+      return coefs.reduce((acc, coef, i) => acc + coef * Math.pow(x, coefs.length - 1 - i), 0);
+    }
+
+    function encontrarIntervalos(coefs, a, b, passo) {
+      let intervalos = [];
+      let xAtual = a;
+      let fAnterior = calcularPolinomio(coefs, xAtual);
+
+      while (xAtual < b) {
+        let xProx = xAtual + passo;
+        let fProx = calcularPolinomio(coefs, xProx);
+
+        if (fAnterior * fProx < 0) {
+          intervalos.push([xAtual, xProx]);
+        }
+
+        xAtual = xProx;
+        fAnterior = fProx;
+      }
+      return intervalos;
+    }
+
+    function bissecao(coefs, a, b, epsilon) {
+      let fa = calcularPolinomio(coefs, a);
+      let fb = calcularPolinomio(coefs, b);
+      let iteracoes = [];
+      let x;
+
+      if (fa * fb > 0) return null;
+
+      while (Math.abs(b - a) > epsilon) {
+        x = (a + b) / 2;
+        let fx = calcularPolinomio(coefs, x);
+
+        iteracoes.push({a, b, x, fx});
+
+        if (fx === 0) break;
+
+        if (fa * fx < 0) {
+          b = x;
+          fb = fx;
+        } else {
+          a = x;
+          fa = fx;
+        }
+      }
+
+      return {raiz: (a + b) / 2, iteracoes};
+    }
+
+    function calcular() {
+      const grau = parseInt(document.getElementById("grau").value);
+      const coefStr = document.getElementById("coeficientes").value;
+      const epsilon = parseFloat(document.getElementById("epsilon").value);
+      const resultadoDiv = document.getElementById("resultado");
+      resultadoDiv.innerHTML = "";
+
+      if (isNaN(grau) || grau < 1 || !coefStr || isNaN(epsilon) || epsilon <= 0) {
+        resultadoDiv.innerHTML = "<p class='text-red-500 col-span-full text-center'>Preencha todos os campos corretamente.</p>";
+        return;
+      }
+
+      const coefs = coefStr.split(",").map(Number);
+      if (coefs.length !== grau + 1) {
+        resultadoDiv.innerHTML = "<p class='text-red-500 col-span-full text-center'>Número de coeficientes não corresponde ao grau informado.</p>";
+        return;
+      }
+
+      const a = -1000, b = 1000, passo = 1;
+      const intervalos = encontrarIntervalos(coefs, a, b, passo);
+
+      if (intervalos.length === 0) {
+        resultadoDiv.innerHTML = "<p class='text-gray-300 col-span-full text-center'>Nenhum intervalo com mudança de sinal encontrado.</p>";
+        return;
+      }
+
+      intervalos.forEach(([ini, fim], i) => {
+        let res = bissecao(coefs, ini, fim, epsilon);
+        if (res) {
+          const card = document.createElement("div");
+          card.className = "border border-gray-600 rounded-lg p-6 hover:border-fuchsia-500 transition transform hover:scale-105 bg-neutral-800";
+          card.innerHTML = `
+            <h3 class="text-lg font-bold mb-2">Intervalo ${i + 1}: [${ini}, ${fim}]</h3>
+            <p class="text-gray-400 mb-4">Raiz aproximada: <span class="text-green-400 font-semibold">${res.raiz.toFixed(6)}</span></p>
+            <h4 class="text-md font-semibold mb-2 text-orange-400">Iterações</h4>
+            <div class="overflow-x-auto">
+              <table>
+                <tr><th>k</th><th>a</th><th>b</th><th>x</th><th>f(x)</th></tr>
+                ${res.iteracoes.map((it, idx) => `
+                  <tr>
+                    <td>${idx + 1}</td>
+                    <td>${it.a.toFixed(6)}</td>
+                    <td>${it.b.toFixed(6)}</td>
+                    <td>${it.x.toFixed(6)}</td>
+                    <td>${it.fx.toExponential(4)}</td>
+                  </tr>
+                `).join("")}
+              </table>
+            </div>
+          `;
+          resultadoDiv.appendChild(card);
+        }
+      });
+    }
+  </script>
 </body>
 </html>
